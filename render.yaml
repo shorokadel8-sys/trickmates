@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: trickmates
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node server/server.js
+    healthCheckPath: /healthz

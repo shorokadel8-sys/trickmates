@@ -1,0 +1,24 @@
+{
+  "name": "trickmates",
+  "version": "1.0.0",
+  "description": "TRICKMATES — online multiplayer couple prank game (Omar & Shorok)",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "TM_DEBUG=1 node server/server.js",
+    "test:protocol": "node test/protocol.mjs",
+    "test:e2e": "node test/two-player.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "three": "^0.187.0",
+    "ws": "^8.23.0"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true
+}

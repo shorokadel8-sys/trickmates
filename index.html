@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>TRICKMATES — Omar &amp; Shorok</title>
+<meta name="description" content="Online multiplayer couple prank game starring Omar & Shorok">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Cairo:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<script type="importmap">
+{ "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="game"></div>
+
+<!-- ============ MAIN MENU ============ -->
+<section id="menu" class="screen active">
+  <div class="menu-bg"></div>
+  <div class="menu-inner">
+    <div class="logo">
+      <span class="logo-word">TRICK<span>MATES</span></span>
+      <span class="logo-sub">starring <b>Omar</b> &amp; <b>Shorok</b></span>
+    </div>
+    <div class="menu-buttons">
+      <button class="btn big primary" data-go="online">▶ Play Online</button>
+      <button class="btn" data-go="create">Create Private Room</button>
+      <button class="btn" data-go="join">Join Room</button>
+      <div class="row">
+        <button class="btn small" data-go="characters">Characters</button>
+        <button class="btn small" data-go="help">How to Play</button>
+        <button class="btn small" data-go="settings">Settings</button>
+      </div>
+    </div>
+    <div class="conn" id="connStatus">offline</div>
+  </div>
+</section>
+
+<!-- ============ PANELS ============ -->
+<section id="online" class="screen panel-screen">
+  <div class="panel narrow">
+    <h2>Play Online</h2>
+    <p class="muted">Play with your partner on two devices. One of you creates a private room and sends the invite code.</p>
+    <button class="btn big primary" data-go="create">Create Private Room</button>
+    <button class="btn big" data-go="join">Join with a Code</button>
+    <button class="btn ghost" data-go="menu">Back</button>
+  </div>
+</section>
+
+<section id="create" class="screen panel-screen">
+  <div class="panel">
+    <h2>Create Private Room</h2>
+    <p class="muted">Pick who you'll play as. Your partner gets the other character.</p>
+    <div class="char-pick">
+      <button class="char-card selected" data-char="omar"><img src="/assets/ref/omar_happy.jpg" alt="Omar"><b>Omar</b><small>Player 1 · Home Office</small></button>
+      <button class="char-card" data-char="shorok"><img src="/assets/ref/shorok_happy.jpg" alt="Shorok"><b>Shorok</b><small>Player 2 · Kitchen</small></button>
+    </div>
+    <button class="btn big primary" id="btnCreate">Create Room</button>
+    <button class="btn ghost" data-go="menu">Back</button>
+  </div>
+</section>
+
+<section id="join" class="screen panel-screen">
+  <div class="panel narrow">
+    <h2>Join Room</h2>
+    <p class="muted">Enter the 5-letter invite code your partner sent you.</p>
+    <input id="joinCode" maxlength="5" autocomplete="off" spellcheck="false" placeholder="ABCDE">
+    <button class="btn big primary" id="btnJoin">Join</button>
+    <button class="btn ghost" data-go="menu">Back</button>
+  </div>
+</section>
+
+<section id="lobby" class="screen panel-screen">
+  <div class="panel">
+    <h2>Private Room</h2>
+    <div class="code-box"><span class="muted">Invite code</span><div id="lobbyCode" class="code">-----</div>
+      <div class="row"><button class="btn small" id="btnCopyCode">Copy code</button><button class="btn small" id="btnCopyLink">Copy invite link</button></div>
+    </div>
+    <div class="lobby-players">
+      <div class="lobby-slot" id="slot-omar"><img src="/assets/ref/omar_happy.jpg" alt=""><b>Omar</b><span class="status">waiting…</span></div>
+      <div class="vs">VS</div>
+      <div class="lobby-slot" id="slot-shorok"><img src="/assets/ref/shorok_happy.jpg" alt=""><b>Shorok</b><span class="status">waiting…</span></div>
+    </div>
+    <p class="muted" id="lobbyHint">Send the code to your partner. The match starts when both are here.</p>
+    <button class="btn big primary" id="btnStart" disabled>Start Match</button>
+    <button class="btn ghost" id="btnLeaveLobby">Leave Room</button>
+  </div>
+</section>
+
+<section id="characters" class="screen panel-screen">
+  <div class="panel wide">
+    <h2>Characters</h2>
+    <div class="char-info">
+      <div>
+        <div class="char-head"><img src="/assets/ref/omar_happy.jpg" alt=""><div><h3>Omar</h3><p class="muted">Designer who lives at his desk. Loves coffee, the cow plush, and big reactions. Brown wavy hair, goatee, blue tee.</p></div></div>
+        <div class="expr-row" data-char="omar"></div>
+      </div>
+      <div>
+        <div class="char-head"><img src="/assets/ref/shorok_happy.jpg" alt=""><div><h3>Shorok</h3><p class="muted">Kitchen queen and master of the sneaky smile. Beige hijab, green eyes, and zero mercy with a plastic spider.</p></div></div>
+        <div class="expr-row" data-char="shorok"></div>
+      </div>
+    </div>
+    <button class="btn ghost" data-go="menu">Back</button>
+  </div>
+</section>
+
+<section id="help" class="screen panel-screen">
+  <div class="panel wide">
+    <h2>How to Play</h2>
+    <div class="help-grid">
+      <img src="/assets/ref/storyboard.jpg" alt="Gameplay example">
+      <div>
+        <ol class="help-list">
+          <li><b>Open the Toolbox</b> <kbd>T</kbd> and pick a prank.</li>
+          <li><b>Walk to the target object</b> (follow the yellow arrow) and <b>hold</b> <kbd>E</kbd> to prepare it.</li>
+          <li>Don't get caught! If your partner is close while you prepare, you lose points.</li>
+          <li>The prank fires when your partner uses the object, walks by, or when you press <b>Activate</b> (remote pranks).</li>
+          <li>Do your <b>chores</b> (hold <kbd>E</kbd>) for points — but watch out for traps.</li>
+          <li>Suspicious? Hold <kbd>F</kbd> to <b>search</b> an object and defuse a hidden prank.</li>
+          <li><kbd>Q</kbd> rings a fake doorbell in another room to lure your partner.</li>
+        </ol>
+        <p class="muted"><kbd>WASD</kbd>/arrows move · <kbd>Shift</kbd> run · click floor to walk · <kbd>1-4</kbd> emotes · <kbd>Esc</kbd> pause · wheel to zoom</p>
+      </div>
+    </div>
+    <button class="btn ghost" data-go="menu">Back</button>
+  </div>
+</section>
+
+<section id="settings" class="screen panel-screen">
+  <div class="panel narrow">
+    <h2>Settings</h2>
+    <label class="field">Volume <input type="range" id="setVolume" min="0" max="1" step="0.05"></label>
+    <label class="field check"><input type="checkbox" id="setSfx"> Sound effects</label>
+    <label class="field">Graphics
+      <select id="setQuality"><option value="high">High (soft shadows)</option><option value="low">Low (faster)</option></select></label>
+    <label class="field">Speech bubbles
+      <select id="setLang"><option value="both">Arabic + English</option><option value="en">English</option><option value="ar">العربية</option></select></label>
+    <label class="field">Camera zoom <input type="range" id="setZoom" min="0.6" max="1.5" step="0.05"></label>
+    <p class="muted small">Graphics changes apply after reload.</p>
+    <button class="btn ghost" id="btnSettingsBack">Back</button>
+  </div>
+</section>
+
+<!-- ============ HUD ============ -->
+<section id="hud" class="hidden">
+  <div class="hud-top">
+    <div class="pcard" id="card-omar"><img alt=""><div><b>Omar</b><span class="score">0</span></div><i class="dot"></i></div>
+    <div class="timer-pill"><span id="roundLabel">Round 1/3</span><b id="timer">2:30</b></div>
+    <div class="pcard right" id="card-shorok"><i class="dot"></i><div><b>Shorok</b><span class="score">0</span></div><img alt=""></div>
+  </div>
+  <div class="hud-left">
+    <div class="hud-box"><h4>🏠 <span id="roomName">—</span></h4></div>
+    <div class="hud-box"><h4>Chores</h4><ul id="choreList"></ul></div>
+    <div class="hud-box"><h4>Challenges</h4><ul id="challengeList" class="challenges"></ul></div>
+  </div>
+  <div class="hud-right">
+    <div class="hud-box"><h4>Armed pranks <span id="armedCount">0/3</span></h4><ul id="trapList"><li class="muted">None yet — open the Toolbox</li></ul></div>
+    <div class="hud-box" id="selectedBox" hidden><h4>Selected</h4><div id="selectedPrank"></div></div>
+    <div class="hud-box" id="lureBox" hidden></div>
+  </div>
+  <div class="hud-bottom">
+    <div id="prompt" class="prompt hidden"></div>
+    <div id="progress" class="progress hidden"><div></div><span></span></div>
+    <div class="risk"><span>Risk</span><div class="risk-bar"><div id="riskFill"></div></div><em id="riskLabel">Safe</em></div>
+  </div>
+  <div class="hud-actions">
+    <button class="btn round" id="btnEmote" title="Emotes (1-4)">😄</button>
+    <button class="btn round" id="btnDistract" title="Distract (Q)">🔔<small id="distractCd"></small></button>
+    <button class="btn round toolbox-btn" id="btnToolbox" title="Toolbox (T)">🧰</button>
+    <button class="btn round" id="btnPause" title="Pause (Esc)">⏸</button>
+  </div>
+  <div id="emoteMenu" class="mini-menu hidden">
+    <button data-emote="laughing">😂 Laugh</button><button data-emote="angry">😠 Angry</button><button data-emote="sneaky">😏 Sneaky</button><button data-emote="happy">😊 Happy</button>
+  </div>
+  <div id="distractMenu" class="mini-menu hidden"><h5>Ring a fake doorbell in…</h5></div>
+  <div id="touch" class="touch">
+    <div id="joy"><div id="joyKnob"></div></div>
+    <div class="touch-btns"><button id="tE">E</button><button id="tF">F</button><button id="tRun">RUN</button></div>
+  </div>
+</section>
+
+<div id="labels"></div>
+<div id="toasts"></div>
+
+<!-- Toolbox (matches storyboard UI) -->
+<section id="toolbox" class="hidden">
+  <div class="tb-head"><span>🧰 Toolbox</span><button id="tbClose" class="x">✕</button></div>
+  <div class="tb-tabs" id="tbTabs"></div>
+  <div class="tb-grid" id="tbGrid"></div>
+  <div class="tb-detail" id="tbDetail"></div>
+</section>
+
+<!-- Prank result card (storyboard style) -->
+<section id="prankCard" class="hidden"></section>
+
+<!-- Overlays -->
+<section id="pause" class="overlay hidden">
+  <div class="panel narrow"><h2 id="pauseTitle">Paused</h2><p class="muted" id="pauseInfo">The match is paused for both players.</p>
+    <button class="btn big primary" id="btnResume">Resume</button>
+    <button class="btn" id="btnPauseSettings">Settings</button>
+    <button class="btn ghost" id="btnQuit">Leave match</button></div>
+</section>
+<section id="intermission" class="overlay hidden"><div class="panel narrow"><h2 id="interTitle">Round complete</h2><div id="interScores" class="inter-scores"></div><p class="muted">Pranks reset · toolbox restocked · next round soon…</p></div></section>
+<section id="results" class="overlay hidden">
+  <div class="panel wide">
+    <h2 id="resTitle">Winner!</h2>
+    <div class="res-players">
+      <div class="res-p" id="res-omar"><img alt=""><b>Omar</b><span class="big-score"></span></div>
+      <div class="res-p" id="res-shorok"><img alt=""><b>Shorok</b><span class="big-score"></span></div>
+    </div>
+    <table class="res-table" id="resTable"></table>
+    <p class="muted" id="rematchInfo"></p>
+    <div class="row center"><button class="btn big primary" id="btnRematch">Rematch</button><button class="btn big" id="btnMenu">Main Menu</button></div>
+  </div>
+</section>
+<div id="loading" class="loading hidden">Loading the house…</div>
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
